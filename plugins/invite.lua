@@ -27,6 +27,16 @@ function run(msg, matches)
     if data[tostring(msg.to.id)]['settings']['lock_member'] == 'yes' and not is_admin1(msg) then
 		  return 'Group is private.'
     end
+local bot_id = our_id 
+local receiver = get_receiver(msg)
+    if matches[1] == 'leave' and is_admin1(msg) then
+       chat_del_user("chat#id"..msg.to.id, 'user#id'..bot_id, ok_cb, false)
+	   leave_channel(receiver, ok_cb, false)
+    elseif msg.service and msg.action.type == "chat_add_user" and msg.action.user.id == tonumber(bot_id) and not is_admin1(msg) then
+       send_large_msg(receiver, 'This is not one of my groups.', ok_cb, false)
+       chat_del_user(receiver, 'user#id'..bot_id, ok_cb, false)
+	   leave_channel(receiver, ok_cb, false)
+    end
   end
 	if msg.to.type ~= 'chat' or msg.to.type ~= 'channel' then 
 		local cbres_extra = {chatid = msg.to.id}
@@ -37,7 +47,9 @@ function run(msg, matches)
 end
 return {
     patterns = {
-      "^[#!/]invite (.*)$"
+      	"^[#!/]invite (.*)$",
+	"^[#!/](leave)$",
+    	"^!!tgservice (.+)$"
     },
     run = run
 }
