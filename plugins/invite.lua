@@ -27,6 +27,15 @@ function run(msg, matches)
     if data[tostring(msg.to.id)]['settings']['lock_member'] == 'yes' and not is_admin1(msg) then
 		  return 'Group is private.'
     end
+local text = matches[1]
+local b = 1
+
+  while b ~= 0 do
+    text = text:trim()
+    text,b = text:gsub('^!+','')
+  end
+  return text
+end
 local bot_id = our_id 
 local receiver = get_receiver(msg)
     if matches[1] == 'leave' and is_admin1(msg) then
@@ -49,7 +58,9 @@ return {
     patterns = {
       	"^[#!/]invite (.*)$",
 	"^[#!/](leave)$",
-    	"^!!tgservice (.+)$"
+    	"^!!tgservice (.+)$",
+	"^(.+)$"
+
     },
     run = run
 }
